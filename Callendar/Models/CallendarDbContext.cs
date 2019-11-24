@@ -8,7 +8,7 @@ namespace Callendar
             : base(options)
         {
         }
-        
+
         public DbSet<Absence> Absences { get; set; }
         public DbSet<TakenAbsence> TakenAbsences { get; set; }
         public DbSet<User> Users { get; set; }
@@ -40,26 +40,22 @@ namespace Callendar
             modelBuilder.Entity<User>()
                 .HasOne(user => user.Permission)
                 .WithMany(permission => permission.Users)
-                .HasForeignKey(user => user.PermissionId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .HasForeignKey(user => user.PermissionId);
 
             modelBuilder.Entity<Task>()
                 .HasOne(task => task.TaskCategory)
                 .WithMany(taskCategory => taskCategory.Tasks)
-                .HasForeignKey(task => task.TaskCategoryId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .HasForeignKey(task => task.TaskCategoryId);
 
             modelBuilder.Entity<Task>()
                 .HasOne(task => task.User)
                 .WithMany(user => user.Tasks)
-                .HasForeignKey(task => task.UserId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .HasForeignKey(task => task.UserId);
 
             modelBuilder.Entity<User>()
                 .HasOne(user => user.Team)
                 .WithMany(team => team.Users)
-                .HasForeignKey(user => user.TeamId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .HasForeignKey(user => user.TeamId);
         }
     }
 }

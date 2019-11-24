@@ -9,6 +9,7 @@ namespace Callendar
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Position { get; set; }
+        public int Points { get; set; }
         public int VacationDaysLeft { get; set; }
         public string PhotoPath { get; set; }
         public bool IsLeader { get; set; }

@@ -19,7 +19,7 @@ namespace Callendar
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TakenAbsence>()
+            modelBuilder.Entity<TakenAbsence>() 
                 .HasKey(takenAbsence => new
                 {
                     takenAbsence.UserId, takenAbsence.AbsenceId

@@ -58,7 +58,6 @@ namespace Callendar
             });
 
             app.UseHttpsRedirection();
-            app.UseAuthentication();
             app.UseMvc();
         }
     }

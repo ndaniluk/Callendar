@@ -19,6 +19,7 @@ namespace Callendar
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration(config => { config.AddJsonFile("appsettings.json"); })
                 .UseStartup<Startup>();
     }
 }

@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Callendar
 {
@@ -31,10 +22,7 @@ namespace Callendar
         {
             services.AddDbContext<CallendarDbContext>
                 (options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConfiguration")));
-            services.AddMvc(opts =>
-            {
-                opts.Filters.Add(new AllowAnonymousFilter());
-            });
+            services.AddMvc(opts => { opts.Filters.Add(new AllowAnonymousFilter()); });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Callendar.Migrations
 {
     [DbContext(typeof(CallendarDbContext))]
-    [Migration("20191124121022_init")]
-    partial class init
+    [Migration("20191219093606_initDb")]
+    partial class initDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -40,15 +40,13 @@ namespace Callendar.Migrations
                     b.ToTable("Absences");
                 });
 
-            modelBuilder.Entity("Callendar.Permission", b =>
+            modelBuilder.Entity("Callendar.Position", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name");
-
-                    b.Property<int>("PermissionLevel");
 
                     b.HasKey("Id");
 
@@ -57,7 +55,7 @@ namespace Callendar.Migrations
 
             modelBuilder.Entity("Callendar.TakenAbsence", b =>
                 {
-                    b.Property<int>("UserId");
+                    b.Property<Guid>("UserId");
 
                     b.Property<int>("AbsenceId");
 
@@ -84,15 +82,11 @@ namespace Callendar.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Description");
-
                     b.Property<bool>("IsClosed");
-
-                    b.Property<string>("Name");
 
                     b.Property<int>("TaskCategoryId");
 
-                    b.Property<int>("UserId");
+                    b.Property<Guid>("UserId");
 
                     b.HasKey("Id");
 
@@ -108,6 +102,8 @@ namespace Callendar.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description");
 
                     b.Property<string>("Name");
 
@@ -133,25 +129,22 @@ namespace Callendar.Migrations
 
             modelBuilder.Entity("Callendar.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Email");
 
                     b.Property<string>("FirstName");
 
-                    b.Property<bool>("IsLeader");
-
                     b.Property<string>("LastName");
 
-                    b.Property<int>("PermissionId");
+                    b.Property<string>("Password");
 
                     b.Property<string>("PhotoPath");
 
                     b.Property<int>("Points");
 
-                    b.Property<string>("Position");
+                    b.Property<int>("PositionId");
 
                     b.Property<int>("TeamId");
 
@@ -159,7 +152,7 @@ namespace Callendar.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PermissionId");
+                    b.HasIndex("PositionId");
 
                     b.HasIndex("TeamId");
 
@@ -194,9 +187,9 @@ namespace Callendar.Migrations
 
             modelBuilder.Entity("Callendar.User", b =>
                 {
-                    b.HasOne("Callendar.Permission", "Permission")
+                    b.HasOne("Callendar.Position", "Position")
                         .WithMany("Users")
-                        .HasForeignKey("PermissionId")
+                        .HasForeignKey("PositionId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Callendar.Team", "Team")

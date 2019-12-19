@@ -15,7 +15,7 @@ namespace Callendar
         public DbSet<Team> Teams { get; set; }
         public DbSet<Task> Tasks { get; set; }
         public DbSet<TaskCategory> TaskCategories { get; set; }
-        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<Position> Permissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,9 +38,9 @@ namespace Callendar
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
-                .HasOne(user => user.Permission)
-                .WithMany(permission => permission.Users)
-                .HasForeignKey(user => user.PermissionId);
+                .HasOne(user => user.Position)
+                .WithMany(position => position.Users)
+                .HasForeignKey(user => user.PositionId);
 
             modelBuilder.Entity<Task>()
                 .HasOne(task => task.TaskCategory)

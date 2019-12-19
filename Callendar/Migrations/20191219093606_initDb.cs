@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Callendar.Migrations
 {
-    public partial class init : Migration
+    public partial class initDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,8 +30,7 @@ namespace Callendar.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true),
-                    PermissionLevel = table.Column<int>(nullable: false)
+                    Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -45,6 +44,7 @@ namespace Callendar.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
                     ScorePoints = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -69,25 +69,23 @@ namespace Callendar.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<Guid>(nullable: false),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
+                    Password = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
-                    Position = table.Column<string>(nullable: true),
                     Points = table.Column<int>(nullable: false),
                     VacationDaysLeft = table.Column<int>(nullable: false),
                     PhotoPath = table.Column<string>(nullable: true),
-                    IsLeader = table.Column<bool>(nullable: false),
-                    PermissionId = table.Column<int>(nullable: false),
+                    PositionId = table.Column<int>(nullable: false),
                     TeamId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_Permissions_PermissionId",
-                        column: x => x.PermissionId,
+                        name: "FK_Users_Permissions_PositionId",
+                        column: x => x.PositionId,
                         principalTable: "Permissions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -104,7 +102,7 @@ namespace Callendar.Migrations
                 columns: table => new
                 {
                     AbsenceId = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false),
                     Id = table.Column<int>(nullable: false),
                     DaysCount = table.Column<int>(nullable: false),
                     IsAccepted = table.Column<bool>(nullable: false),
@@ -134,11 +132,9 @@ namespace Callendar.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
                     IsClosed = table.Column<bool>(nullable: false),
                     TaskCategoryId = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: false)
+                    UserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -173,9 +169,9 @@ namespace Callendar.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_PermissionId",
+                name: "IX_Users_PositionId",
                 table: "Users",
-                column: "PermissionId");
+                column: "PositionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_TeamId",

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Callendar.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Callendar.Controllers
@@ -17,10 +19,14 @@ namespace Callendar.Controllers
 
 		// GET: users/{guid}/dashboard
 		[HttpGet("{guid}/dashboard")]
-		public async Task<ActionResult<User>> GetUserDashboard(Guid guid)
+		public async Task<ActionResult<IEnumerable<string>>> GetUserDashboard(Guid guid)
 		{
-			//TODO
-			return null;
+			var user = await _context.Users.FindAsync(guid);
+			user.Position = await _context.Permissions.FindAsync(user.PositionId);
+
+			return user == null ? 
+				(ActionResult<IEnumerable<string>>)NotFound() : 
+				(ActionResult<IEnumerable<string>>)Ok(DashboardsJsonHelper.GetDashboard(user));
 		}
 
 		// POST: users/{guid}/dashboard/absencePeriod/{startDate}/{endDate}/absenceType/{absenceTypeId}

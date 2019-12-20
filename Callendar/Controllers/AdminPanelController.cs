@@ -9,27 +9,27 @@ namespace Callendar.Controllers
 {
 	[Route("users")]
 	[ApiController]
-	public class UsersController : ControllerBase
+	public class AdminPanelController : ControllerBase
 	{
 		private readonly CallendarDbContext _context;
 
-		public UsersController(CallendarDbContext context)
+		public AdminPanelController(CallendarDbContext context)
 		{
 			_context = context;
 		}
 
-		// GET: users
-		[HttpGet]
+		// GET: users/{liderGuid}/adminPanel
+		[HttpGet("{liderGuid}/adminPanel")]
 		public async Task<ActionResult<IEnumerable<User>>> GetUsers()
 		{
 			return await _context.Users.ToListAsync();
 		}
 
-		// GET: users/{guid}
-		[HttpGet("{guid}")]
-		public async Task<ActionResult<User>> GetUser(Guid guid)
+		// GET: users/{liderGuid}/adminPanel/{userGuid}
+		[HttpGet("{liderGuid}/adminPanel/{userGuid}")]
+		public async Task<ActionResult<User>> GetUser(Guid liderGuid, Guid userGuid)
 		{
-			var user = await _context.Users.FindAsync(guid);
+			var user = await _context.Users.FindAsync(userGuid);
 
 			if (user == null)
 			{
@@ -39,11 +39,11 @@ namespace Callendar.Controllers
 			return user;
 		}
 
-		// PUT: users/{guid}
-		[HttpPut("{guid}")]
-		public async Task<IActionResult> PutUser(Guid guid, User user)
+		// PUT: users/{liderGuid}/adminPanel/{userGuid}
+		[HttpPut("{liderGuid}/adminPanel/{userGuid}")]
+		public async Task<IActionResult> PutUser(Guid liderGuid, Guid userGuid, User user)
 		{
-			if (guid != user.Id)
+			if (userGuid != user.Id)
 			{
 				return BadRequest();
 			}
@@ -56,7 +56,7 @@ namespace Callendar.Controllers
 			}
 			catch (DbUpdateConcurrencyException)
 			{
-				if (!UserExists(guid))
+				if (!UserExists(userGuid))
 				{
 					return NotFound();
 				}
@@ -69,9 +69,9 @@ namespace Callendar.Controllers
 			return NoContent();
 		}
 
-		// POST: users
-		[HttpPost]
-		public async Task<ActionResult<User>> PostUser(User user)
+		// POST: users/{liderGuid}/adminPanel
+		[HttpPost("{liderGuid}/adminPanel")]
+		public async Task<ActionResult<User>> PostUser(Guid liderGuid, User user)
 		{
 			_context.Users.Add(user);
 			await _context.SaveChangesAsync();
@@ -79,11 +79,11 @@ namespace Callendar.Controllers
 			return CreatedAtAction("GetUser", new { id = user.Id }, user);
 		}
 
-		// DELETE: users/{guid}
-		[HttpDelete("{guid}")]
-		public async Task<ActionResult<User>> DeleteUser(Guid guid)
+		// DELETE: users/{liderGuid}/adminPanel/{userGuid}
+		[HttpDelete("{liderGuid}/adminPanel/{userGuid}")]
+		public async Task<ActionResult<User>> DeleteUser(Guid liderGuid, Guid userGuid)
 		{
-			var user = await _context.Users.FindAsync(guid);
+			var user = await _context.Users.FindAsync(userGuid);
 			if (user == null)
 			{
 				return NotFound();

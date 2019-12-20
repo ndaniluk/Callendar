@@ -39,7 +39,7 @@ namespace Callendar.Controllers
 			return user;
 		}
 
-		// PUT: users/{guguid}
+		// PUT: users/{guid}
 		[HttpPut("{guid}")]
 		public async Task<IActionResult> PutUser(Guid guid, User user)
 		{

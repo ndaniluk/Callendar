@@ -58,27 +58,42 @@ namespace Callendar.Controllers
             return new OkObjectResult(newTakenAbsence);
         }
 
-        [HttpPut("{guid}/dashboard/absence/{absenceId}/acceptation/{isAccepted}")]
-        public async Task<ActionResult<TakenAbsence>> AcceptAbsence(Guid guid, int absenceId, bool isAccepted)
+        [HttpPut("{guid}/dashboard/absence/{absenceId}")]
+        public async Task<ActionResult<TakenAbsence>> AcceptAbsence(Guid guid, int absenceId)
         {
             var usersHelper = new UsersHelper(_context);
-            if (await usersHelper.IsGuidCorrect(guid))
+            if (!await usersHelper.IsGuidCorrect(guid)) return new NotFoundResult();
+            var absence = await _context.TakenAbsences
+                .Where(x => x.Id == absenceId)
+                .SingleAsync();
+                
+            if (absence == null) return new NotFoundResult();
+                
+            absence.IsAccepted = true;
+            _context.TakenAbsences.Update(absence);
+            if (await _context.SaveChangesAsync() > 0)
             {
-                var absence = await _context.TakenAbsences
-                    .Where(x => x.Id == absenceId)
-                    .SingleAsync();
-                if (absence == null) return new NotFoundResult();
-                if (isAccepted)
-                {
-                    absence.IsAccepted = true;
-                    _context.TakenAbsences.Update(absence);
-                    await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    _context.TakenAbsences.Remove(absence);
-                    await _context.SaveChangesAsync();
-                }
+                return new OkObjectResult(absence);
+            }
+
+            return new NotFoundResult();
+        }
+
+        [HttpDelete("{guid}/dashboard/absence/{absenceId}")]
+        public async Task<ActionResult<TakenAbsence>> DeleteAbsence(Guid guid, int absenceId)
+        {
+            var usersHelper = new UsersHelper(_context);
+            if (!await usersHelper.IsGuidCorrect(guid)) return new NotFoundResult();
+            var absence = await _context.TakenAbsences
+                .Where(x => x.Id == absenceId)
+                .SingleAsync();
+            
+            if (absence == null) return new NotFoundResult();
+
+            _context.TakenAbsences.Remove(absence);
+            if (await _context.SaveChangesAsync() > 0)
+            {
+                return new OkObjectResult(absence);
             }
 
             return new NotFoundResult();

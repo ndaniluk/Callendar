@@ -23,7 +23,7 @@ namespace Callendar
             modelBuilder.Entity<TakenAbsence>()
                 .HasKey(takenAbsence => new
                 {
-                    takenAbsence.UserId, takenAbsence.AbsenceId
+                    takenAbsence.Id
                 });
 
             modelBuilder.Entity<TakenAbsence>()

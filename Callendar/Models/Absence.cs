@@ -5,7 +5,6 @@ namespace Callendar
 {
     public class Absence
     {
-        [JsonIgnore]
         public int Id { get; set; }
         public string Name { get; set; }
         public bool IsWork { get; set; }
@@ -13,6 +12,6 @@ namespace Callendar
         public string RepresentingColor { get; set; }
 
         [JsonIgnore]
-        public IList<TakenAbsence> TakenAbsences { get; set; }
+        public ICollection<TakenAbsence> TakenAbsences { get; set; }
     }
 }

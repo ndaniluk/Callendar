@@ -5,7 +5,6 @@ namespace Callendar
 {
     public class Task
     {
-        [JsonIgnore]
         public int Id { get; set; }
         public bool IsClosed { get; set; }
 

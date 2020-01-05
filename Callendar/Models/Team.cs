@@ -5,7 +5,6 @@ namespace Callendar
 {
     public class Team
     {
-        [JsonIgnore]
         public int Id { get; set; }
         public string Name { get; set; }
 

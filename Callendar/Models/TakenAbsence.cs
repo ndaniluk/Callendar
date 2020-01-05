@@ -5,7 +5,6 @@ namespace Callendar
 {
     public class TakenAbsence
     {
-        [JsonIgnore]
         public int Id { get; set; }
         public int DaysCount { get; set; }
         public bool IsAccepted { get; set; }

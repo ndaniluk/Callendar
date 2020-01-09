@@ -10,7 +10,6 @@ namespace Callendar
         public string Description { get; set; }
         public int ScorePoints { get; set; }
 
-        [JsonIgnore]
-        public ICollection<Task> Tasks { get; set; }
+        [JsonIgnore] public ICollection<Task> Tasks { get; set; }
     }
 }

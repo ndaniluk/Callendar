@@ -2,19 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Callendar.Helpers.Dashboard
 {
     public class DashboardsJsonHelper
     {
-        private enum EPosition
-        {
-            Telemarketer,
-            Accountant,
-            Leader
-        }
+        private readonly CallendarDbContext _context;
 
         private readonly Dictionary<string, EPosition> _positions = new Dictionary<string, EPosition>
         {
@@ -22,8 +16,6 @@ namespace Callendar.Helpers.Dashboard
             {"Accountant", EPosition.Accountant},
             {"Leader", EPosition.Leader}
         };
-
-        private readonly CallendarDbContext _context;
 
         public DashboardsJsonHelper(CallendarDbContext context)
         {
@@ -36,7 +28,7 @@ namespace Callendar.Helpers.Dashboard
                 .Where(x => x.Id == guid)
                 .Select(x => x.Position.Name)
                 .SingleOrDefaultAsync();
-            
+
             IUserDashboard dashboard;
 
             if (_positions.TryGetValue(userPosition, out var position))
@@ -58,6 +50,13 @@ namespace Callendar.Helpers.Dashboard
                 return null;
 
             return await dashboard.GetDashboardInfo(_context, guid);
+        }
+
+        private enum EPosition
+        {
+            Telemarketer,
+            Accountant,
+            Leader
         }
     }
 }

@@ -9,204 +9,198 @@ namespace Callendar.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Absences",
-                columns: table => new
+                "Absences",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy",
+                            SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
-                    IsWork = table.Column<bool>(nullable: false),
-                    SalaryPercent = table.Column<double>(nullable: false),
+                    IsWork = table.Column<bool>(),
+                    SalaryPercent = table.Column<double>(),
                     RepresentingColor = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Absences", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Absences", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "Permissions",
-                columns: table => new
+                "Permissions",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy",
+                            SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Permissions", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Permissions", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "TaskCategories",
-                columns: table => new
+                "TaskCategories",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy",
+                            SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    ScorePoints = table.Column<int>(nullable: false)
+                    ScorePoints = table.Column<int>()
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TaskCategories", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_TaskCategories", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "Teams",
-                columns: table => new
+                "Teams",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy",
+                            SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Teams", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Teams", x => x.Id); });
 
             migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
+                "Users",
+                table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
                     Password = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
-                    Points = table.Column<int>(nullable: false),
-                    VacationDaysLeft = table.Column<int>(nullable: false),
+                    Points = table.Column<int>(),
+                    VacationDaysLeft = table.Column<int>(),
                     PhotoPath = table.Column<string>(nullable: true),
-                    PositionId = table.Column<int>(nullable: false),
-                    TeamId = table.Column<int>(nullable: false)
+                    PositionId = table.Column<int>(),
+                    TeamId = table.Column<int>()
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_Permissions_PositionId",
-                        column: x => x.PositionId,
-                        principalTable: "Permissions",
-                        principalColumn: "Id",
+                        "FK_Users_Permissions_PositionId",
+                        x => x.PositionId,
+                        "Permissions",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Users_Teams_TeamId",
-                        column: x => x.TeamId,
-                        principalTable: "Teams",
-                        principalColumn: "Id",
+                        "FK_Users_Teams_TeamId",
+                        x => x.TeamId,
+                        "Teams",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TakenAbsences",
-                columns: table => new
+                "TakenAbsences",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    DaysCount = table.Column<int>(nullable: false),
-                    IsAccepted = table.Column<bool>(nullable: false),
-                    StartDate = table.Column<DateTime>(nullable: false),
-                    EndDate = table.Column<DateTime>(nullable: false),
-                    AbsenceId = table.Column<int>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false)
+                    Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy",
+                            SqlServerValueGenerationStrategy.IdentityColumn),
+                    DaysCount = table.Column<int>(),
+                    IsAccepted = table.Column<bool>(),
+                    StartDate = table.Column<DateTime>(),
+                    EndDate = table.Column<DateTime>(),
+                    AbsenceId = table.Column<int>(),
+                    UserId = table.Column<Guid>()
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TakenAbsences", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TakenAbsences_Absences_AbsenceId",
-                        column: x => x.AbsenceId,
-                        principalTable: "Absences",
-                        principalColumn: "Id",
+                        "FK_TakenAbsences_Absences_AbsenceId",
+                        x => x.AbsenceId,
+                        "Absences",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TakenAbsences_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
+                        "FK_TakenAbsences_Users_UserId",
+                        x => x.UserId,
+                        "Users",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tasks",
-                columns: table => new
+                "Tasks",
+                table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    IsClosed = table.Column<bool>(nullable: false),
-                    TaskCategoryId = table.Column<int>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false)
+                    Id = table.Column<int>()
+                        .Annotation("SqlServer:ValueGenerationStrategy",
+                            SqlServerValueGenerationStrategy.IdentityColumn),
+                    IsClosed = table.Column<bool>(),
+                    TaskCategoryId = table.Column<int>(),
+                    UserId = table.Column<Guid>()
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tasks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tasks_TaskCategories_TaskCategoryId",
-                        column: x => x.TaskCategoryId,
-                        principalTable: "TaskCategories",
-                        principalColumn: "Id",
+                        "FK_Tasks_TaskCategories_TaskCategoryId",
+                        x => x.TaskCategoryId,
+                        "TaskCategories",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Tasks_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
+                        "FK_Tasks_Users_UserId",
+                        x => x.UserId,
+                        "Users",
+                        "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_TakenAbsences_AbsenceId",
-                table: "TakenAbsences",
-                column: "AbsenceId");
+                "IX_TakenAbsences_AbsenceId",
+                "TakenAbsences",
+                "AbsenceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TakenAbsences_UserId",
-                table: "TakenAbsences",
-                column: "UserId");
+                "IX_TakenAbsences_UserId",
+                "TakenAbsences",
+                "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tasks_TaskCategoryId",
-                table: "Tasks",
-                column: "TaskCategoryId");
+                "IX_Tasks_TaskCategoryId",
+                "Tasks",
+                "TaskCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tasks_UserId",
-                table: "Tasks",
-                column: "UserId");
+                "IX_Tasks_UserId",
+                "Tasks",
+                "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_PositionId",
-                table: "Users",
-                column: "PositionId");
+                "IX_Users_PositionId",
+                "Users",
+                "PositionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_TeamId",
-                table: "Users",
-                column: "TeamId");
+                "IX_Users_TeamId",
+                "Users",
+                "TeamId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "TakenAbsences");
+                "TakenAbsences");
 
             migrationBuilder.DropTable(
-                name: "Tasks");
+                "Tasks");
 
             migrationBuilder.DropTable(
-                name: "Absences");
+                "Absences");
 
             migrationBuilder.DropTable(
-                name: "TaskCategories");
+                "TaskCategories");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                "Users");
 
             migrationBuilder.DropTable(
-                name: "Permissions");
+                "Permissions");
 
             migrationBuilder.DropTable(
-                name: "Teams");
+                "Teams");
         }
     }
 }

@@ -25,7 +25,8 @@ namespace Callendar
                 (options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConfiguration")));
             services.AddMvc(opts => { opts.Filters.Add(new AllowAnonymousFilter()); });
             services.AddMvc()
-                .AddJsonOptions(options => {
+                .AddJsonOptions(options =>
+                {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

@@ -39,7 +39,7 @@ namespace Callendar.Helpers.Employee
                 .SingleAsync();
             return user == null;
         }
-        
+
         public byte[] HashPassword(string password)
         {
             var provider = new RNGCryptoServiceProvider();
@@ -48,6 +48,16 @@ namespace Callendar.Helpers.Employee
 
             var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 1000);
             return pbkdf2.GetBytes(20);
+        }
+
+        public async Task<bool> IsLimitOfOnDemand(Guid userId)
+        {
+            var count = await _context.Users
+                .Where(x => x.Id == userId)
+                .SelectMany(x => x.TakenAbsences)
+                .CountAsync(x => x.Absence.Name == "onDemand");
+
+            return count < 4;
         }
     }
 }

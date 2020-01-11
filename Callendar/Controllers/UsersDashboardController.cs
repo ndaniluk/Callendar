@@ -38,6 +38,12 @@ namespace Callendar.Controllers
         {
             var usersHelper = new UsersHelper(_context);
             if (!await usersHelper.IsGuidCorrect(userId)) return new NotFoundResult();
+
+            if (absenceType == "onDemand" && !await usersHelper.IsLimitOfOnDemand(userId))
+            {
+                return new OkObjectResult("On demand absences limit has been reached");
+            }
+            
             var newTakenAbsence = new TakenAbsence
             {
                 User = await _context.Users.Where(x => x.Id == userId).SingleOrDefaultAsync(),
@@ -92,7 +98,8 @@ namespace Callendar.Controllers
 
             return new NotFoundResult();
         }
-
+        
+        //Returns count of not accepted absences
         [HttpGet("{userId}/dashboard/absence/count")]
         public async Task<ActionResult<TakenAbsence>> GetNotAcceptedAbsencesCount(Guid userId)
         {

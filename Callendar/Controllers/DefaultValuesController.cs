@@ -36,11 +36,35 @@ namespace Callendar.Controllers
             _context.Absences.Add(new Absence
             {
                 Name = "sick",
-                IsWork = true,
+                IsWork = false,
                 SalaryPercent = 80,
-                RepresentingColor = "#FA3847"
+                RepresentingColor = "czerwony"
             });
 
+            _context.Absences.Add(new Absence
+            {
+                Name = "vacation",
+                IsWork = false,
+                SalaryPercent = 100,
+                RepresentingColor = "green"
+            });
+            
+            _context.Absences.Add(new Absence
+            {
+                Name = "business",
+                IsWork = true,
+                SalaryPercent = 100,
+                RepresentingColor = "blue"
+            });
+            
+            _context.Absences.Add(new Absence
+            {
+                Name = "OnDemand",
+                IsWork = false,
+                SalaryPercent = 100,
+                RepresentingColor = "yellow"
+            });
+            
             _context.Permissions.Add(new Position
             {
                 Name = "Marketer"

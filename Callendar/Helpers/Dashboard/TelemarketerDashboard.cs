@@ -12,7 +12,7 @@ namespace Callendar.Helpers
             return await context.Users
                 .Where(x => x.Id == guid)
                 .Include(x => x.Tasks)
-                .Include(x => x.TakenAbsences)
+                .Include(x => x.TakenAbsences).ThenInclude(x => x.Absence)
                 .Include(x => x.Position)
                 .SingleOrDefaultAsync();
         }

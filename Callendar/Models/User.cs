@@ -14,6 +14,7 @@ namespace Callendar
 
         public string Email { get; set; }
         public int Points { get; set; }
+        public int MaxVacationDays { get; set; }
         public int VacationDaysLeft { get; set; }
         public string PhotoPath { get; set; }
 

@@ -26,6 +26,7 @@ namespace Callendar.Controllers
                 Password = "SUPERHASH5000",
                 Email = "norbert@daniluk.dev",
                 Points = 50,
+                MaxVacationDays = 28,
                 VacationDaysLeft = 21,
                 PhotoPath = "C:/BrakZdjecia",
                 PositionId = 1,

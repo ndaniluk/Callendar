@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace Callendar
@@ -27,5 +28,20 @@ namespace Callendar
         [JsonIgnore]
         public int TeamId { get; set; }
         public Team Team { get; set; }
+
+        public int TasksCount => Tasks.Count;
+        public int TasksToDoCount => Tasks.Where(x => x.IsClosed == false).Count();
+        public int TasksDoneCount => Tasks.Where(x => x.IsClosed).Count();
+        public int PointsToGet => CalculatePointsToGet();
+
+        private int CalculatePointsToGet()
+        {
+            int points = 0;
+
+            foreach (var task in Tasks)
+                points += task.TaskCategory.ScorePoints;
+
+            return points;
+        }
     }
 }

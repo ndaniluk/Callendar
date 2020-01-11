@@ -18,7 +18,7 @@ namespace Callendar.Controllers
         }
         
 //        //Adds new user to the same team leader is in
-//        [HttpPost("{userId}/adminPanel/user")]
+//        [HttpPost("{userId}/user")]
 //        public async Task<ActionResult<User>> AddUser(Guid userId, [FromBody] User newUser)
 //        {
 //            var userHelper = new UsersHelper(_context);

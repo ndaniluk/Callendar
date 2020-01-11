@@ -92,5 +92,17 @@ namespace Callendar.Controllers
 
             return new NotFoundResult();
         }
+
+        [HttpGet("{userId}/dashboard/absence/count")]
+        public async Task<ActionResult<TakenAbsence>> GetNotAcceptedAbsencesCount(Guid userId)
+        {
+            var usersHelper = new UsersHelper(_context);
+            if (!await usersHelper.IsGuidCorrect(userId)) return new NotFoundResult();
+            var notAcceptedAbsencesCount = await _context.TakenAbsences
+                .Where(x => x.IsAccepted == false)
+                .CountAsync();
+
+            return new OkObjectResult(notAcceptedAbsencesCount);
+        }
     }
 }

@@ -24,13 +24,15 @@ namespace Callendar.Controllers
 //            var userHelper = new UsersHelper(_context);
 //            if (await userHelper.IsGuidCorrect(userId) && await userHelper.IsLeader(userId))
 //            {
-//                if (!await userHelper.IsAlreadyRegistered(newUser.Email)) return new 
-//                
-//                _context.Users.Add(new User()
+//                if (!await userHelper.IsAlreadyRegistered(newUser.Email))
 //                {
-//
-//                });
+//                    newUser.Password = userHelper.HashPassword(newUser.Password).ToString();
+//                    _context.Users.Add(newUser);
+//                    return new OkObjectResult(newUser);
+//                }
+//                return new OkObjectResult("User already registered");
 //            }
+//            return new OkObjectResult("You don't have needed permissions to add new user");
 //        }
 
         [HttpDelete("{liderGuid}/adminPanel/{userGuid}")]

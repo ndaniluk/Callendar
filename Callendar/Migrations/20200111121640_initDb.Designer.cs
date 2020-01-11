@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Callendar.Migrations
 {
     [DbContext(typeof(CallendarDbContext))]
-    [Migration("20200111091258_initDb")]
+    [Migration("20200111121640_initDb")]
     partial class initDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

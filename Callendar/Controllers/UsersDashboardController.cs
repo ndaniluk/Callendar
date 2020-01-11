@@ -43,6 +43,11 @@ namespace Callendar.Controllers
             {
                 return new OkObjectResult("On demand absences limit has been reached");
             }
+
+            if (DateTime.Compare(startDate, endDate) > 0)
+            {
+                return new OkObjectResult("Ending date is earlier than starting date");
+            }
             
             var newTakenAbsence = new TakenAbsence
             {
@@ -53,7 +58,7 @@ namespace Callendar.Controllers
                 IsAccepted = false,
                 StartDate = startDate,
                 EndDate = endDate,
-                DaysCount = (int) (endDate - startDate).TotalDays
+                DaysCount = (int) (endDate - startDate).TotalDays + 1
             };
 
             _context.TakenAbsences.Add(newTakenAbsence);

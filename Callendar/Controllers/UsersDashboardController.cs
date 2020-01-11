@@ -22,34 +22,43 @@ namespace Callendar.Controllers
         }
 
         //Returns basic information that will appear in dashboard
-        [HttpGet("{guid}/dashboard")]
-        public async Task<ActionResult<User>> GetUserDashboard(Guid guid)
+        [HttpGet("{userId}/dashboard")]
+        public async Task<ActionResult<User>> GetUserDashboard(Guid userId)
         {
-            var user = await _dashboardsJsonHelper.GetDashboard(guid);
-            if (user == null)
-            {
-                return new NotFoundResult();
-            }
+            var user = await _dashboardsJsonHelper.GetDashboard(userId);
+            if (user == null) return new NotFoundResult();
 
             return new OkObjectResult(user);
         }
 
-        [HttpPost("{guid}/dashboard/absence/{startDate}/{endDate}/type/{absenceType}")]
-        public async Task<ActionResult<TakenAbsence>> AddAbsence(Guid guid, DateTime startDate, DateTime endDate,
+        //Adds new absence
+        [HttpPost("{userId}/dashboard/absence/{startDate}/{endDate}/type/{absenceType}")]
+        public async Task<ActionResult<TakenAbsence>> AddAbsence(Guid userId, DateTime startDate, DateTime endDate,
             string absenceType)
         {
             var usersHelper = new UsersHelper(_context);
-            if (!await usersHelper.IsGuidCorrect(guid)) return new NotFoundResult();
-            var newTakenAbsence = new TakenAbsence()
+            if (!await usersHelper.IsGuidCorrect(userId)) return new NotFoundResult();
+
+            if (absenceType == "onDemand" && !await usersHelper.IsLimitOfOnDemand(userId))
             {
-                User = await _context.Users.Where(x => x.Id == guid).SingleOrDefaultAsync(),
+                return new OkObjectResult("On demand absences limit has been reached");
+            }
+
+            if (DateTime.Compare(startDate, endDate) > 0)
+            {
+                return new OkObjectResult("Ending date is earlier than starting date");
+            }
+            
+            var newTakenAbsence = new TakenAbsence
+            {
+                User = await _context.Users.Where(x => x.Id == userId).SingleOrDefaultAsync(),
                 Absence = await _context.Absences
                     .Where(x => x.Name == absenceType)
                     .SingleOrDefaultAsync(),
                 IsAccepted = false,
                 StartDate = startDate,
                 EndDate = endDate,
-                DaysCount = (int) (endDate - startDate).TotalDays
+                DaysCount = (int) (endDate - startDate).TotalDays + 1
             };
 
             _context.TakenAbsences.Add(newTakenAbsence);
@@ -58,45 +67,54 @@ namespace Callendar.Controllers
             return new OkObjectResult(newTakenAbsence);
         }
 
-        [HttpPut("{guid}/dashboard/absence/{absenceId}")]
-        public async Task<ActionResult<TakenAbsence>> AcceptAbsence(Guid guid, int absenceId)
+        //Accepts an absence
+        [HttpPut("{userId}/dashboard/absence/{absenceId}")]
+        public async Task<ActionResult<TakenAbsence>> AcceptAbsence(Guid userId, int absenceId)
         {
             var usersHelper = new UsersHelper(_context);
-            if (!await usersHelper.IsGuidCorrect(guid)) return new NotFoundResult();
+            if (!await usersHelper.IsGuidCorrect(userId)) return new NotFoundResult();
             var absence = await _context.TakenAbsences
                 .Where(x => x.Id == absenceId)
                 .SingleAsync();
-                
+
             if (absence == null) return new NotFoundResult();
-                
+
             absence.IsAccepted = true;
             _context.TakenAbsences.Update(absence);
-            if (await _context.SaveChangesAsync() > 0)
-            {
-                return new OkObjectResult(absence);
-            }
+            if (await _context.SaveChangesAsync() > 0) return new OkObjectResult(absence);
 
             return new NotFoundResult();
         }
 
-        [HttpDelete("{guid}/dashboard/absence/{absenceId}")]
-        public async Task<ActionResult<TakenAbsence>> DeleteAbsence(Guid guid, int absenceId)
+        //Removes an absence
+        [HttpDelete("{userId}/dashboard/absence/{absenceId}")]
+        public async Task<ActionResult<TakenAbsence>> DeleteAbsence(Guid userId, int absenceId)
         {
             var usersHelper = new UsersHelper(_context);
-            if (!await usersHelper.IsGuidCorrect(guid)) return new NotFoundResult();
+            if (!await usersHelper.IsGuidCorrect(userId)) return new NotFoundResult();
             var absence = await _context.TakenAbsences
                 .Where(x => x.Id == absenceId)
                 .SingleAsync();
-            
+
             if (absence == null) return new NotFoundResult();
 
             _context.TakenAbsences.Remove(absence);
-            if (await _context.SaveChangesAsync() > 0)
-            {
-                return new OkObjectResult(absence);
-            }
+            if (await _context.SaveChangesAsync() > 0) return new OkObjectResult(absence);
 
             return new NotFoundResult();
+        }
+        
+        //Returns count of not accepted absences
+        [HttpGet("{userId}/dashboard/absence/count")]
+        public async Task<ActionResult<TakenAbsence>> GetNotAcceptedAbsencesCount(Guid userId)
+        {
+            var usersHelper = new UsersHelper(_context);
+            if (!await usersHelper.IsGuidCorrect(userId)) return new NotFoundResult();
+            var notAcceptedAbsencesCount = await _context.TakenAbsences
+                .Where(x => x.IsAccepted == false)
+                .CountAsync();
+
+            return new OkObjectResult(notAcceptedAbsencesCount);
         }
     }
 }

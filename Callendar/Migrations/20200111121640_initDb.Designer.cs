@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Callendar.Migrations
 {
     [DbContext(typeof(CallendarDbContext))]
-    [Migration("20200105135908_db_init")]
-    partial class db_init
+    [Migration("20200111121640_initDb")]
+    partial class initDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -141,6 +141,8 @@ namespace Callendar.Migrations
                     b.Property<string>("FirstName");
 
                     b.Property<string>("LastName");
+
+                    b.Property<int>("MaxVacationDays");
 
                     b.Property<string>("Password");
 

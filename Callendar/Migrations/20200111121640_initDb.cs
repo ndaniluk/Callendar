@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Callendar.Migrations
 {
-    public partial class db_init : Migration
+    public partial class initDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -75,6 +75,7 @@ namespace Callendar.Migrations
                     Password = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
                     Points = table.Column<int>(nullable: false),
+                    MaxVacationDays = table.Column<int>(nullable: false),
                     VacationDaysLeft = table.Column<int>(nullable: false),
                     PhotoPath = table.Column<string>(nullable: true),
                     PositionId = table.Column<int>(nullable: false),

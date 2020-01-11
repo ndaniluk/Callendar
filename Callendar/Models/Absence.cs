@@ -11,7 +11,6 @@ namespace Callendar
         public double SalaryPercent { get; set; }
         public string RepresentingColor { get; set; }
 
-        [JsonIgnore]
-        public ICollection<TakenAbsence> TakenAbsences { get; set; }
+        [JsonIgnore] public ICollection<TakenAbsence> TakenAbsences { get; set; }
     }
 }

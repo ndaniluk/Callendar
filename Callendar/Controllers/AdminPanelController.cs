@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Callendar.Helpers.Employee;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Callendar.Controllers
 {
-    [Route("users")]
+    [Route("admin")]
     [ApiController]
     public class AdminPanelController : ControllerBase
     {
@@ -17,58 +16,25 @@ namespace Callendar.Controllers
         {
             _context = context;
         }
+        
+//        //Adds new user to the same team leader is in
+//        [HttpPost("{userId}/user")]
+//        public async Task<ActionResult<User>> AddUser(Guid userId, [FromBody] User newUser)
+//        {
+//            var userHelper = new UsersHelper(_context);
+//            if (await userHelper.IsGuidCorrect(userId) && await userHelper.IsLeader(userId))
+//            {
+//                if (!await userHelper.IsAlreadyRegistered(newUser.Email))
+//                {
+//                    newUser.Password = userHelper.HashPassword(newUser.Password).ToString();
+//                    _context.Users.Add(newUser);
+//                    return new OkObjectResult(newUser);
+//                }
+//                return new OkObjectResult("User already registered");
+//            }
+//            return new OkObjectResult("You don't have needed permissions to add new user");
+//        }
 
-        // GET: users/{liderGuid}/adminPanel
-        [HttpGet("{liderGuid}/adminPanel")]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
-        {
-            return await _context.Users.ToListAsync();
-        }
-
-        // GET: users/{liderGuid}/adminPanel/{userGuid}
-        [HttpGet("{liderGuid}/adminPanel/{userGuid}")]
-        public async Task<ActionResult<User>> GetUser(Guid liderGuid, Guid userGuid)
-        {
-            var user = await _context.Users.FindAsync(userGuid);
-
-            if (user == null) return NotFound();
-
-            return user;
-        }
-
-        // PUT: users/{liderGuid}/adminPanel/{userGuid}
-        [HttpPut("{liderGuid}/adminPanel/{userGuid}")]
-        public async Task<IActionResult> PutUser(Guid liderGuid, Guid userGuid, User user)
-        {
-            if (userGuid != user.Id) return BadRequest();
-
-            _context.Entry(user).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(userGuid))
-                    return NotFound();
-                throw;
-            }
-
-            return NoContent();
-        }
-
-        // POST: users/{liderGuid}/adminPanel
-        [HttpPost("{liderGuid}/adminPanel")]
-        public async Task<ActionResult<User>> PostUser(Guid liderGuid, User user)
-        {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetUser", new {id = user.Id}, user);
-        }
-
-        // DELETE: users/{liderGuid}/adminPanel/{userGuid}
         [HttpDelete("{liderGuid}/adminPanel/{userGuid}")]
         public async Task<ActionResult<User>> DeleteUser(Guid liderGuid, Guid userGuid)
         {

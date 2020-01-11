@@ -140,6 +140,8 @@ namespace Callendar.Migrations
 
                     b.Property<string>("LastName");
 
+                    b.Property<int>("MaxVacationDays");
+
                     b.Property<string>("Password");
 
                     b.Property<string>("PhotoPath");

@@ -26,6 +26,7 @@ namespace Callendar.Controllers
         {
             var user = await _context.Users
                 .Where(x => x.Id == guid)
+                .Include(x => x.Position)
                 .SingleOrDefaultAsync();
 
             if (user == null)

@@ -38,7 +38,7 @@ namespace Callendar.Controllers
                 Name = "sick",
                 IsWork = false,
                 SalaryPercent = 80,
-                RepresentingColor = "czerwony"
+                RepresentingColor = "red"
             });
 
             _context.Absences.Add(new Absence

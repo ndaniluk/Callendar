@@ -11,12 +11,12 @@ namespace Callendar
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
-        [JsonIgnore] public int AbsenceId { get; set; }
+        public int AbsenceId { get; set; }
 
         public Absence Absence { get; set; }
 
-        [JsonIgnore] public Guid UserId { get; set; }
+        public Guid UserId { get; set; }
 
-        [JsonIgnore] public User User { get; set; }
+        public User User { get; set; }
     }
 }

@@ -17,26 +17,25 @@ namespace Callendar.Controllers
             _context = context;
         }
         
-//        //Adds new user to the same team leader is in
-//        [HttpPost("{userId}/user")]
-//        public async Task<ActionResult<User>> AddUser(Guid userId, [FromBody] User newUser)
-//        {
-//            var userHelper = new UsersHelper(_context);
-//            if (await userHelper.IsGuidCorrect(userId) && await userHelper.IsLeader(userId))
-//            {
-//                if (!await userHelper.IsAlreadyRegistered(newUser.Email))
-//                {
-//                    newUser.Password = userHelper.HashPassword(newUser.Password).ToString();
-//                    _context.Users.Add(newUser);
-//                    return new OkObjectResult(newUser);
-//                }
-//                return new OkObjectResult("User already registered");
-//            }
-//            return new OkObjectResult("You don't have needed permissions to add new user");
-//        }
+        //Adds new user to the same team leader is in
+        [HttpPost("{userId}/user")]
+        public async Task<ActionResult<User>> AddUser(Guid userId, [FromBody] User newUser)
+        {
+            var userHelper = new UsersHelper(_context);
+            if (!await userHelper.IsGuidCorrect(userId) || !await userHelper.IsLeader(userId))
+                return new OkObjectResult("You don't have needed permissions to add new user");
+            
+            if (await userHelper.IsAlreadyRegistered(newUser.Email))
+                return new OkObjectResult("User already registered");
+            
+            newUser.Password = userHelper.HashPassword(newUser.Password).ToString();
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+            return new OkObjectResult(newUser);
+        }
 
-        [HttpDelete("{liderGuid}/adminPanel/{userGuid}")]
-        public async Task<ActionResult<User>> DeleteUser(Guid liderGuid, Guid userGuid)
+        [HttpDelete("{leaderGuid}/adminPanel/{userGuid}")]
+        public async Task<ActionResult<User>> DeleteUser(Guid leaderGuid, Guid userGuid)
         {
             var user = await _context.Users.FindAsync(userGuid);
             if (user == null) return NotFound();

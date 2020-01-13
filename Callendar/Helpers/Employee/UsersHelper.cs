@@ -25,19 +25,17 @@ namespace Callendar.Helpers.Employee
 
         public async Task<bool> IsLeader(Guid userId)
         {
-            var user = await _context.Users
-                .Where(x => x.Id == userId)
-                .Where(x => x.Position.Name == "Leader")
+            var user = await _context.Users 
+                .Include(x => x.Position)
+                .Where(x => x.Id == userId && x.Position.Name == "Leader")
                 .SingleAsync();
+            
             return user != null;
         }
 
         public async Task<bool> IsAlreadyRegistered(string email)
         {
-            var user = await _context.Users
-                .Where(x => x.Email == email)
-                .SingleAsync();
-            return user == null;
+            return await _context.Users.AnyAsync(x => x.Email == email);;
         }
 
         public byte[] HashPassword(string password)

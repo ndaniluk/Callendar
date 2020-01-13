@@ -49,6 +49,10 @@ namespace Callendar.Controllers
                 return new OkObjectResult("Ending date is earlier than starting date");
             }
             
+            var user = await _context.Users.Where(x => x.Id == userId).SingleOrDefaultAsync();
+            
+            if (user.VacationDaysLeft <= 0) return new OkObjectResult("You have reached the limit of your absences");
+
             var newTakenAbsence = new TakenAbsence
             {
                 User = await _context.Users.Where(x => x.Id == userId).SingleOrDefaultAsync(),
@@ -77,13 +81,17 @@ namespace Callendar.Controllers
                 .Where(x => x.Id == absenceId)
                 .SingleAsync();
 
+            var user = await _context.Users.Where(x => x.Id == userId).SingleOrDefaultAsync();
+            user.VacationDaysLeft -= 1;
+            _context.Users.Update(user);
+            
             if (absence == null) return new NotFoundResult();
 
             absence.IsAccepted = true;
             _context.TakenAbsences.Update(absence);
-            if (await _context.SaveChangesAsync() > 0) return new OkObjectResult(absence);
-
-            return new NotFoundResult();
+            
+            await _context.SaveChangesAsync();
+            return new OkObjectResult(absence);
         }
 
         //Removes an absence

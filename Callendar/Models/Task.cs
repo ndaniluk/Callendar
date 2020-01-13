@@ -8,12 +8,12 @@ namespace Callendar
         public int Id { get; set; }
         public bool IsClosed { get; set; }
 
-        [JsonIgnore] public int TaskCategoryId { get; set; }
+        public int TaskCategoryId { get; set; }
 
         public TaskCategory TaskCategory { get; set; }
 
-        [JsonIgnore] public Guid UserId { get; set; }
+        public Guid UserId { get; set; }
 
-        [JsonIgnore] public User User { get; set; }
+        public User User { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace Callendar.Controllers
                 u.Email.Equals(usersEmailAndPassword.Email) &&
                 u.Password.Equals(usersEmailAndPassword.Password));
 
-            return users.Any() ? (ActionResult<Guid>) Ok(users.First().Id) : (ActionResult<Guid>) Unauthorized();
+            return users.Any() ? (ActionResult<Guid>)Ok(users.First().Id) : (ActionResult<Guid>) Unauthorized();
         }
     }
 }

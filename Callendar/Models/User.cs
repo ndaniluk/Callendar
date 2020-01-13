@@ -11,7 +11,7 @@ namespace Callendar
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-        [JsonIgnore] public string Password { get; set; }
+        /*[JsonIgnore]*/ public string Password { get; set; }
 
         public string Email { get; set; }
         public int Points { get; set; }

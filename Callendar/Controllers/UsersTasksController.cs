@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Callendar.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +25,8 @@ namespace Callendar.Controllers
         public async Task<ActionResult<User>> GetUserInfo(Guid guid)
         {
             var user = await _context.Users
-                .Where(x => x.Id == guid).SingleOrDefaultAsync();
+                .Where(x => x.Id == guid)
+                .SingleOrDefaultAsync();
 
             if (user == null)
             {
@@ -111,6 +113,7 @@ namespace Callendar.Controllers
         {
             var tasks = await _context.Tasks
                 .Where(x => x.UserId == guid)
+                .Include(x => x.TaskCategory)
                 .ToListAsync();
 
             if (tasks == null)

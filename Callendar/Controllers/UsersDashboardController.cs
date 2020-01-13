@@ -40,17 +40,13 @@ namespace Callendar.Controllers
             if (!await usersHelper.IsGuidCorrect(userId)) return new NotFoundResult();
 
             if (absenceType == "onDemand" && !await usersHelper.IsLimitOfOnDemand(userId))
-            {
                 return new OkObjectResult("On demand absences limit has been reached");
-            }
 
             if (DateTime.Compare(startDate, endDate) > 0)
-            {
                 return new OkObjectResult("Ending date is earlier than starting date");
-            }
-            
+
             var user = await _context.Users.Where(x => x.Id == userId).SingleOrDefaultAsync();
-            
+
             if (user.VacationDaysLeft <= 0) return new OkObjectResult("You have reached the limit of your absences");
 
             var newTakenAbsence = new TakenAbsence
@@ -84,12 +80,12 @@ namespace Callendar.Controllers
             var user = await _context.Users.Where(x => x.Id == userId).SingleOrDefaultAsync();
             user.VacationDaysLeft -= 1;
             _context.Users.Update(user);
-            
+
             if (absence == null) return new NotFoundResult();
 
             absence.IsAccepted = true;
             _context.TakenAbsences.Update(absence);
-            
+
             await _context.SaveChangesAsync();
             return new OkObjectResult(absence);
         }
@@ -111,7 +107,7 @@ namespace Callendar.Controllers
 
             return new NotFoundResult();
         }
-        
+
         //Returns count of not accepted absences
         [HttpGet("{userId}/dashboard/absence/count")]
         public async Task<ActionResult<TakenAbsence>> GetNotAcceptedAbsencesCount(Guid userId)

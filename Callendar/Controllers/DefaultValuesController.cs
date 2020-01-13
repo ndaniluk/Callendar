@@ -48,7 +48,7 @@ namespace Callendar.Controllers
                 SalaryPercent = 100,
                 RepresentingColor = "green"
             });
-            
+
             _context.Absences.Add(new Absence
             {
                 Name = "business",
@@ -56,7 +56,7 @@ namespace Callendar.Controllers
                 SalaryPercent = 100,
                 RepresentingColor = "blue"
             });
-            
+
             _context.Absences.Add(new Absence
             {
                 Name = "OnDemand",
@@ -64,7 +64,7 @@ namespace Callendar.Controllers
                 SalaryPercent = 100,
                 RepresentingColor = "yellow"
             });
-            
+
             _context.Permissions.Add(new Position
             {
                 Name = "Marketer"

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Callendar.Helpers.Employee;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Callendar.Controllers
 {
@@ -17,13 +20,19 @@ namespace Callendar.Controllers
 
         // POST: login
         [HttpPost]
-        public ActionResult<Guid> AuthorizeUser(User usersEmailAndPassword)
+        public async Task<ActionResult<Guid>> AuthorizeUser([FromBody] User userInfo)
         {
-            var users = _context.Users.Where(u =>
-                u.Email.Equals(usersEmailAndPassword.Email) &&
-                u.Password.Equals(usersEmailAndPassword.Password));
+            var user = await _context.Users
+                .Where(x => x.Email.Equals(userInfo.Email))
+                .SingleOrDefaultAsync();
 
-            return users.Any() ? (ActionResult<Guid>) Ok(users.First().Id) : (ActionResult<Guid>) Unauthorized();
+            var usersHelper = new UsersHelper(_context);
+
+            if (await usersHelper.VerifyPassword(userInfo.Email, userInfo.Password))
+            {
+                return new OkObjectResult(user.Id);
+            }
+            return new ForbidResult();
         }
     }
 }

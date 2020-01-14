@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Callendar.Helpers.Employee;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Callendar.Controllers
 {
@@ -26,20 +28,20 @@ namespace Callendar.Controllers
 
             if (await userHelper.IsAlreadyRegistered(newUser.Email))
                 return new OkObjectResult("User already registered");
-
-//            newUser.Password = userHelper.HashPassword(newUser.Password).ToString(); TODO: HASHOWANIE
+            
+            newUser.Password = userHelper.HashPassword(newUser.Password);
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
             return new OkObjectResult(newUser);
         }
 
-        [HttpDelete("{leaderGuid}/adminPanel/{userGuid}")]
+        [HttpDelete("{leaderId}/adminPanel/{userId}")]
         public async Task<ActionResult<User>> DeleteUser(Guid leaderId, Guid userId)
         {
             var userHelper = new UsersHelper(_context);
             if (!await userHelper.IsGuidCorrect(leaderId) || !await userHelper.IsLeader(leaderId))
                 return new NotFoundResult();
-                
+
             var user = await _context.Users.FindAsync(userId);
             if (user == null) return NotFound();
 

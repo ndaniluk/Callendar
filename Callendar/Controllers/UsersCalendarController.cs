@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Callendar.Controllers
 {
@@ -16,11 +19,25 @@ namespace Callendar.Controllers
         }
 
         // GET: users/{guid}/calendar
-        [HttpGet("{guid}/calendar")]
-        public async Task<ActionResult<User>> GetUserCalendar(Guid guid)
+        [HttpGet("{userId}/calendar")]
+        public async Task<ActionResult<List<User>>> GetUserCalendar(Guid userId)
         {
-            //TODO
-            return null;
+            var user = await _context.Users
+                .Where(x => x.Id == userId)
+                .SingleAsync();
+
+            if (user == null)
+            {
+                return new NotFoundResult();
+            }
+
+            var team = await _context.Users
+                .Where(x => x.TeamId == user.TeamId)
+                .Include(x => x.TakenAbsences).ThenInclude(x => x.Absence)
+                .ToListAsync();
+
+            return new OkObjectResult(team);
+
         }
     }
 }

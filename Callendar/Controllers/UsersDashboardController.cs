@@ -120,5 +120,21 @@ namespace Callendar.Controllers
 
             return new OkObjectResult(notAcceptedAbsencesCount);
         }
+
+        [HttpGet("{userId}/teams")]
+        public async Task<ActionResult<Team>> GetAllTeams(Guid userId)
+        {
+            var usersHelper = new UsersHelper(_context);
+            if (!await usersHelper.IsGuidCorrect(userId)) return new NotFoundResult();
+            return new OkObjectResult(await _context.Teams.Select(x => x).ToListAsync());
+        }
+        
+        [HttpGet("{userId}/positions")]
+        public async Task<ActionResult<Position>> GetAllPositions(Guid userId)
+        {
+            var usersHelper = new UsersHelper(_context);
+            if (!await usersHelper.IsGuidCorrect(userId)) return new NotFoundResult();
+            return new OkObjectResult(await _context.Permissions.Select(x => x).ToListAsync());
+        }
     }
 }

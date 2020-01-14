@@ -49,16 +49,39 @@ namespace Callendar.Helpers.Employee
             return await _context.Users.AnyAsync(x => x.Email == email);
         }
 
-        public byte[] HashPassword(string password)
+        public string HashPassword(string password)
         {
-            var provider = new RNGCryptoServiceProvider();
-            var salt = new byte[8];
-            provider.GetBytes(salt);
-
-            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 1000);
-            return pbkdf2.GetBytes(20);
+            byte[] salt;
+            new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
+            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000);
+            var hash = pbkdf2.GetBytes(20);
+            var hashBytes = new byte[36];
+            Array.Copy(salt, 0, hashBytes, 0, 16);
+            Array.Copy(hash, 0, hashBytes, 16, 20);
+            var savedPasswordHash = Convert.ToBase64String(hashBytes);
+            return savedPasswordHash;
         }
 
+        public async Task<bool> VerifyPassword(string email, string password)
+        {
+            var actualPassword = await _context.Users
+                .Where(x => x.Email == email)
+                .Select(x => x.Password)
+                .SingleOrDefaultAsync();
+            
+            var hashBytes = Convert.FromBase64String(actualPassword);
+
+            var salt = new byte[16];
+            Array.Copy(hashBytes, 0, salt, 0, 16);
+
+            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000);
+            var hash = pbkdf2.GetBytes(20);
+
+            for (var i=0; i < 20; i++)
+                if (hashBytes[i + 16] != hash[i])
+                    return false;
+            return true;
+        }
         public async Task<bool> IsLimitOfOnDemand(Guid userId)
         {
             var count = await _context.Users

@@ -25,8 +25,8 @@ namespace Callendar.Controllers
             if (!await userHelper.IsGuidCorrect(userId) || !await userHelper.IsAccountant(userId))
                 return new OkObjectResult("You don't have needed permissions to export the data");
 
-            ExcelDocumentCreator documentCreator = new ExcelDocumentCreator(_context);
-            ExcelDocument document = await documentCreator.GetExcelDocument();
+            var documentCreator = new ExcelDocumentCreator(_context);
+            var document = await documentCreator.GetExcelDocument();
 
             return new OkObjectResult(document);
         }

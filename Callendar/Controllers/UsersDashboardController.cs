@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Callendar.Helpers.Dashboard;
@@ -56,8 +58,8 @@ namespace Callendar.Controllers
                     .Where(x => x.Name == absenceType)
                     .SingleOrDefaultAsync(),
                 IsAccepted = false,
-                StartDate = startDate,
-                EndDate = endDate,
+                StartDate = startDate.AddSeconds(1),
+                EndDate = endDate.AddSeconds(1),
                 DaysCount = (int) (endDate - startDate).TotalDays + 1
             };
 
@@ -89,7 +91,7 @@ namespace Callendar.Controllers
             await _context.SaveChangesAsync();
             return new OkObjectResult(absence);
         }
-
+        
         //Removes an absence
         [HttpDelete("{userId}/dashboard/absence/{absenceId}")]
         public async Task<ActionResult<TakenAbsence>> DeleteAbsence(Guid userId, int absenceId)
@@ -115,8 +117,7 @@ namespace Callendar.Controllers
             var usersHelper = new UsersHelper(_context);
             if (!await usersHelper.IsGuidCorrect(userId)) return new NotFoundResult();
             var notAcceptedAbsencesCount = await _context.TakenAbsences
-                .Where(x => x.IsAccepted == false)
-                .CountAsync();
+                .CountAsync(x => x.IsAccepted == false);
 
             return new OkObjectResult(notAcceptedAbsencesCount);
         }
@@ -135,6 +136,17 @@ namespace Callendar.Controllers
             var usersHelper = new UsersHelper(_context);
             if (!await usersHelper.IsGuidCorrect(userId)) return new NotFoundResult();
             return new OkObjectResult(await _context.Permissions.Select(x => x).ToListAsync());
+        }
+
+        [HttpGet("{userId}/teamMembers/{teamId}")]
+        public async Task<ActionResult<IEnumerable<User>>> GetTeamMembers(Guid userId, int teamId)
+        {
+            var usersHelper = new UsersHelper(_context);
+            if (!await usersHelper.IsGuidCorrect(userId)) return new NotFoundResult();
+
+            return new OkObjectResult(await _context.Users
+                .Where(x => x.TeamId == teamId)
+                .ToListAsync());
         }
     }
 }

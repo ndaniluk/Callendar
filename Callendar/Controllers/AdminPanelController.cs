@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Callendar.Helpers.Employee;
@@ -19,11 +20,11 @@ namespace Callendar.Controllers
         }
 
         //Adds new user to the same team leader is in
-        [HttpPost("{userId}/user")]
-        public async Task<ActionResult<User>> AddUser(Guid userId, [FromBody] User newUser)
+        [HttpPost("{leaderId}/user")]
+        public async Task<ActionResult<User>> AddUser(Guid leaderId, [FromBody] User newUser)
         {
             var userHelper = new UsersHelper(_context);
-            if (!await userHelper.IsGuidCorrect(userId) || !await userHelper.IsLeader(userId))
+            if (!await userHelper.IsGuidCorrect(leaderId) || !await userHelper.IsLeader(leaderId))
                 return new OkObjectResult("You don't have needed permissions to add new user");
 
             if (await userHelper.IsAlreadyRegistered(newUser.Email))
@@ -49,6 +50,38 @@ namespace Callendar.Controllers
             await _context.SaveChangesAsync();
 
             return user;
+        }
+
+        [HttpPut("{leaderId}/adminPanel/password/{userId}")]
+        public async Task<ActionResult<User>> ChangePassword(Guid leaderId, Guid userId, [FromBody] string newPassword)
+        {
+            var userHelper = new UsersHelper(_context);
+            if (!await userHelper.IsGuidCorrect(leaderId) || !await userHelper.IsGuidCorrect(userId) || !await userHelper.IsLeader(leaderId))
+                return new NotFoundResult();
+
+            var user = await _context.Users
+                .Where(x => x.Id == userId)
+                .SingleOrDefaultAsync();
+
+            user.Password = userHelper.HashPassword(newPassword);
+
+            return new OkObjectResult(user);
+        }
+
+        [HttpGet("{leaderId}/adminPanel/tasks")]
+        public async Task<ActionResult<List<Task>>> GetTasksFromTeam(Guid leaderId)
+        {
+            var userHelper = new UsersHelper(_context);
+            if (!await userHelper.IsGuidCorrect(leaderId) || !await userHelper.IsLeader(leaderId))
+                return new NotFoundResult();
+
+            var leader = await _context.Users
+                .Where(x => x.Id == leaderId)
+                .SingleOrDefaultAsync();
+                
+            return new OkObjectResult(_context.Tasks
+                .Where(x => x.User.TeamId == leader.TeamId)
+                .ToListAsync());
         }
     }
 }

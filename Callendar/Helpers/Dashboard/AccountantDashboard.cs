@@ -13,6 +13,7 @@ namespace Callendar.Helpers.Dashboard
                 .Where(x => x.Id == guid)
                 .Include(x => x.TakenAbsences).ThenInclude(x => x.Absence)
                 .Include(x => x.Position)
+                .Include(x => x.Team)
                 .SingleOrDefaultAsync();
         }
     }

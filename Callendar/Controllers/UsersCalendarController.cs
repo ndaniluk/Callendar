@@ -37,7 +37,6 @@ namespace Callendar.Controllers
                 .ToListAsync();
 
             return new OkObjectResult(team);
-
         }
     }
 }

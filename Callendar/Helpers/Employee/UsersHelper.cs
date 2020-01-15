@@ -87,7 +87,7 @@ namespace Callendar.Helpers.Employee
             var count = await _context.Users
                 .Where(x => x.Id == userId)
                 .SelectMany(x => x.TakenAbsences)
-                .CountAsync(x => x.Absence.Name == "onDemand");
+                .CountAsync(x => x.Absence.Name == "Zadanie");
 
             return count < 4;
         }

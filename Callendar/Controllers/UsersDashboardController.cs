@@ -41,7 +41,7 @@ namespace Callendar.Controllers
             var usersHelper = new UsersHelper(_context);
             if (!await usersHelper.IsGuidCorrect(userId)) return new NotFoundResult();
 
-            if (absenceType == "onDemand" && !await usersHelper.IsLimitOfOnDemand(userId))
+            if (absenceType == "Zadanie" && !await usersHelper.IsLimitOfOnDemand(userId))
                 return new OkObjectResult("On demand absences limit has been reached");
 
             if (DateTime.Compare(startDate, endDate) > 0)

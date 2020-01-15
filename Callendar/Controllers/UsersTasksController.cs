@@ -147,7 +147,7 @@ namespace Callendar.Controllers
 
             if (user == null) return new NotFoundResult();
 
-            var taskCategory = await _context.Tasks
+            var taskCategory = await _context.TaskCategories
                 .Where(x => x.Id == taskCategoryId)
                 .SingleOrDefaultAsync();
 

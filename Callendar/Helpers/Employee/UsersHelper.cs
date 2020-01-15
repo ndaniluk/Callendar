@@ -19,7 +19,7 @@ namespace Callendar.Helpers.Employee
         {
             var user = await _context.Users
                 .Where(x => x.Id == userId)
-                .SingleAsync();
+                .SingleOrDefaultAsync();
 
             return user != null;
         }

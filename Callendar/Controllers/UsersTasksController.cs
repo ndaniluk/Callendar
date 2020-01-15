@@ -91,12 +91,12 @@ namespace Callendar.Controllers
             return new OkObjectResult(tasksCategories);
         }
 
-        // GET: users/{guid}/tasks
-        [HttpGet("{guid}/tasks")]
+		// GET: users/{userId}/tasks
+		[HttpGet("{userId}/tasks")]
         public async Task<ActionResult<IEnumerable<Task>>> GetTelemarketerTasks(Guid userId)
         {
             var userHelper = new UsersHelper(_context);
-            if (await userHelper.IsGuidCorrect(userId)) return new NotFoundResult();
+            if (!await userHelper.IsGuidCorrect(userId)) return new NotFoundResult();
 
             var tasks = await _context.Tasks
                 .Where(x => x.UserId == userId)
@@ -134,12 +134,12 @@ namespace Callendar.Controllers
             return new OkObjectResult(task);
         }
 
-        // POST: users/{guid}/tasks/{taskCategoryId}/telemarketer/{telemarketerGuid}
-        [HttpPost("{guid}/tasks/{taskCategoryId}/telemarketer/{telemarketerGuid}")]
+		// POST: users/{userId}/tasks/{taskCategoryId}/telemarketer/{telemarketerGuid}
+		[HttpPost("{userId}/tasks/{taskCategoryId}/telemarketer/{telemarketerGuid}")]
         public async Task<ActionResult> PostTasksForTelemarketer(Guid userId, int taskCategoryId, Guid telemarketerGuid)
         {
             var userHelper = new UsersHelper(_context);
-            if (await userHelper.IsGuidCorrect(userId)) return new NotFoundResult();
+            if (!await userHelper.IsGuidCorrect(userId)) return new NotFoundResult();
 
             var user = await _context.Users
                 .Where(x => x.Id == telemarketerGuid)
@@ -147,7 +147,7 @@ namespace Callendar.Controllers
 
             if (user == null) return new NotFoundResult();
 
-            var taskCategory = await _context.Tasks
+            var taskCategory = await _context.TaskCategories
                 .Where(x => x.Id == taskCategoryId)
                 .SingleOrDefaultAsync();
 

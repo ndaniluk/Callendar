@@ -17,7 +17,22 @@ namespace Callendar.Controllers
         {
             _context = context;
         }
+        
+        [HttpPut("{userId}/password")]
+        public async Task<ActionResult<User>> ChangePassword(Guid userId, [FromBody] string newPassword)
+        {
+            var userHelper = new UsersHelper(_context);
+            if (!await userHelper.IsGuidCorrect(userId))
+                return new NotFoundResult();
 
+            var user = await _context.Users
+                .Where(x => x.Id == userId)
+                .SingleOrDefaultAsync();
+
+            user.Password = userHelper.HashPassword(newPassword);
+
+            return new OkObjectResult(user);
+        }
         // POST: login
         [HttpPost]
         public async Task<ActionResult<Guid>> AuthorizeUser([FromBody] User userInfo)

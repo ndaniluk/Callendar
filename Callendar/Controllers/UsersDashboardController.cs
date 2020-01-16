@@ -47,6 +47,21 @@ namespace Callendar.Controllers
             if (DateTime.Compare(startDate, endDate) > 0)
                 return new OkObjectResult("Ending date is earlier than starting date");
 
+            var takenAbsences = await _context.TakenAbsences
+                .Where(x => x.UserId == userId)
+                .ToListAsync();
+
+            var anyAbsence = takenAbsences
+                .Any(x => startDate >= x.StartDate
+                          && startDate <= x.EndDate
+                          || endDate >= x.StartDate
+                          && endDate <= x.EndDate);
+
+            if (anyAbsence)
+            {
+                return new OkObjectResult("Data już została zarezerwowana przez inny urlop");
+            }
+            
             var user = await _context.Users.Where(x => x.Id == userId).SingleOrDefaultAsync();
 
             if (user.VacationDaysLeft <= 0) return new OkObjectResult("You have reached the limit of your absences");

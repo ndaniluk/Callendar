@@ -52,22 +52,6 @@ namespace Callendar.Controllers
             return user;
         }
 
-        [HttpPut("{leaderId}/adminPanel/password/{userId}")]
-        public async Task<ActionResult<User>> ChangePassword(Guid leaderId, Guid userId, [FromBody] string newPassword)
-        {
-            var userHelper = new UsersHelper(_context);
-            if (!await userHelper.IsGuidCorrect(leaderId) || !await userHelper.IsGuidCorrect(userId) || !await userHelper.IsLeader(leaderId))
-                return new NotFoundResult();
-
-            var user = await _context.Users
-                .Where(x => x.Id == userId)
-                .SingleOrDefaultAsync();
-
-            user.Password = userHelper.HashPassword(newPassword);
-
-            return new OkObjectResult(user);
-        }
-
         [HttpGet("{leaderId}/adminPanel/tasks")]
         public async Task<ActionResult<List<Task>>> GetTasksFromTeam(Guid leaderId)
         {

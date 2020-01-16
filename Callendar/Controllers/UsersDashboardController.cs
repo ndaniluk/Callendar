@@ -117,6 +117,7 @@ namespace Callendar.Controllers
             var usersHelper = new UsersHelper(_context);
             if (!await usersHelper.IsGuidCorrect(userId)) return new NotFoundResult();
             var notAcceptedAbsencesCount = await _context.TakenAbsences
+                .Where(x => x.UserId == userId)
                 .CountAsync(x => x.IsAccepted == false);
 
             return new OkObjectResult(notAcceptedAbsencesCount);

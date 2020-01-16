@@ -79,7 +79,7 @@ namespace Callendar.Controllers
                 .Where(x => x.Id == leaderId)
                 .SingleOrDefaultAsync();
                 
-            return new OkObjectResult(_context.Tasks
+            return new OkObjectResult(await _context.Tasks
                 .Where(x => x.User.TeamId == leader.TeamId)
                 .ToListAsync());
         }

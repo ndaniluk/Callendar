@@ -36,7 +36,7 @@ namespace Callendar.Controllers
 
         // GET: users/{guid}/telemarketerStatistics
         [HttpGet("{guid}/telemarketerStatistics")]
-        public async Task<ActionResult<TelemarketerStatistics>> GetTelemarketerStatistics(Guid guid)
+        public async Task<ActionResult<TelemarketerStatisticsWebModel>> GetTelemarketerStatistics(Guid guid)
         {
             var user = await _context.Users
                 .Where(x => x.Id == guid).SingleOrDefaultAsync();
@@ -50,7 +50,7 @@ namespace Callendar.Controllers
 
             var pointsToGet = tasks.Where(t => t.IsClosed == false).Sum(task => task.TaskCategory.ScorePoints);
 
-            var telemarketerStatistics = new TelemarketerStatistics
+            var telemarketerStatistics = new TelemarketerStatisticsWebModel
             {
                 PointsToGet = pointsToGet,
                 TasksToDoCount = tasks.Count(x => x.IsClosed == false),

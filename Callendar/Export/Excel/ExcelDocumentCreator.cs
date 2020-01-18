@@ -42,9 +42,9 @@ namespace Callendar.Export.Excel
                     LastName = employee.LastName,
                     Points = employee.Points,
                     PositionName = employee.Position.Name,
-                    L4Days = CountTakenVacationThisMonth(employee.TakenAbsences, "sick"),
+                    L4Days = CountTakenVacationThisMonth(employee.TakenAbsences, "Chorobowy"),
                     MaxVacationDays = employee.MaxVacationDays,
-                    VacationDays = CountTakenVacationThisMonth(employee.TakenAbsences, "vacation")
+                    VacationDays = CountTakenVacationThisMonth(employee.TakenAbsences, "Wypoczynkowy")
                 };
 
                 employeesExportData.Add(employeeExportData);

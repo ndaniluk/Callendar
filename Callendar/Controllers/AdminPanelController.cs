@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Callendar.Helpers.Employee;
+﻿using Callendar.Helpers.Employee;
+using Callendar.WebModels.StatisticsForLeaderWebModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Callendar.Controllers
 {
@@ -53,7 +53,7 @@ namespace Callendar.Controllers
         }
 
         [HttpGet("{leaderId}/adminPanel/tasks")]
-        public async Task<ActionResult<List<Task>>> GetTasksFromTeam(Guid leaderId)
+        public async Task<ActionResult<StatisticsForLeaderWebModel>> GetTasksFromTeam(Guid leaderId)
         {
             var userHelper = new UsersHelper(_context);
             if (!await userHelper.IsGuidCorrect(leaderId) || !await userHelper.IsLeader(leaderId))
@@ -62,10 +62,11 @@ namespace Callendar.Controllers
             var leader = await _context.Users
                 .Where(x => x.Id == leaderId)
                 .SingleOrDefaultAsync();
-                
-            return new OkObjectResult(await _context.Tasks
-                .Where(x => x.User.TeamId == leader.TeamId)
-                .ToListAsync());
+
+            var statisticsCreator = new StatisticsForLeaderCreator(_context, leader.TeamId);
+            var statistics = await statisticsCreator.GetStatisticsForLeader();
+
+            return new OkObjectResult(statistics);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Callendar.Models
 {
-    public class TelemarketerStatistics
+    public class TelemarketerStatisticsWebModel
     {
         public int TasksToDoCount { get; set; }
         public int TasksDoneCount { get; set; }

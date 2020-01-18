@@ -30,7 +30,8 @@ namespace Callendar.Controllers
                 .SingleOrDefaultAsync();
 
             user.Password = userHelper.HashPassword(newPassword);
-
+            await _context.SaveChangesAsync();
+            
             return new OkObjectResult(user);
         }
         // POST: login
